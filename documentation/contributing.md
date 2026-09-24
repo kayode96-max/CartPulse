@@ -37,13 +37,17 @@ Verify:
 
 ## Pull Requests
 
-A pull request should explain:
+Read the **[Pull Request Guide](https://github.com/kayode96-max/CartPulse/issues/2)** before starting implementation.
 
-- What changed
-- Why it changed
-- Which user flow it affects
-- How it was tested
-- Known limitations
+Contributors must first **signify interest in an issue and be assigned to it** before taking on the work. Do not start implementation on an unassigned issue.
+
+Every PR must:
+
+- Link the assigned issue.
+- Explain what changed and why.
+- Describe how it was tested.
+- State known limitations.
+- Include a **screenshot or video recording showing the implementation working**. For backend or non-visual work, provide equivalent evidence such as test output, an API response or a recorded behavior.
 
 Keep PRs focused and avoid mixing unrelated refactors with feature work.
 
