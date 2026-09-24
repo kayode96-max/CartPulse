@@ -68,17 +68,76 @@ budgetPercent = (subtotal / budgetLimit) × 100
 
 The implementation should calculate these values from the item list and budget limit so there is one source of truth.
 
-## Budget status
+## Budget status and trigger rules
 
-Map the derived percentage to the design states:
+The status is determined from the estimated checkout total, including estimated tax:
 
 ```text
-0–79%   → safe
-80–94%  → warning
-95%+    → critical
+budgetPercent = (estimatedTotal / budgetLimit) × 100
 ```
 
-The critical state also covers an actual over-budget cart. When `remaining < 0`, the UI should show the overrun amount rather than presenting a negative value as if it were available spending room.
+### Under Budget
+
+Trigger:
+
+```text
+estimatedTotal < 0.80 × budgetLimit
+```
+
+### Warning
+
+Trigger:
+
+```text
+0.80 × budgetLimit ≤ estimatedTotal < 0.95 × budgetLimit
+```
+
+The warning state begins exactly when the estimated total reaches 80% of the budget.
+
+### Critical
+
+Trigger:
+
+```text
+0.95 × budgetLimit ≤ estimatedTotal ≤ budgetLimit
+```
+
+### Over Budget
+
+Trigger:
+
+```text
+estimatedTotal > budgetLimit
+```
+
+When over budget, the overrun is:
+
+```text
+overrun = estimatedTotal - budgetLimit
+```
+
+The UI must show the overrun rather than presenting a negative remaining amount as available spending room.
+
+### Estimated tax
+
+The budget decision uses the estimated total, not only the pre-tax subtotal:
+
+```text
+estimatedTax = taxableSubtotal × estimatedTaxRate
+estimatedTotal = subtotal + estimatedTax
+remaining = budgetLimit - estimatedTotal
+```
+
+For example, with a ₦100,000 budget, a ₦78,000 subtotal and a 7.5% estimated tax rate:
+
+```text
+estimatedTax = ₦78,000 × 0.075 = ₦5,850
+estimatedTotal = ₦83,850
+budgetPercent = 83.85%
+→ Warning
+```
+
+Tax is an estimate, not a guaranteed register total. The UI should label it as estimated and recalculate it whenever the taxable cart amount changes.
 
 ## Core state transitions
 
